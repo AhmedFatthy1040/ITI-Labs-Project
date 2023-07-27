@@ -1,1 +1,2 @@
-Ahmed:Fatthi:ddd:sss:Male:Cairo:USA:No skills selected:OpenSource
+Ahmed:Al-Khatib:lorax:12345:Male:Cairo:USA:MySQL:OpenSource
+Muhammed:Al-Khatib:nnnnnnnnnnnnn:sss:Male:UK:Qubaa:PHP, PostgreSQL:OS
