@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Edit User Information</title>
-    <link rel="stylesheet" href="editStyle.css">
+    <link rel="stylesheet" href="css/editStyle.css">
 </head>
 <body>
 <?php

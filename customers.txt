@@ -1,2 +1,1 @@
-Ahmed:Al-Khatib:lorax:12345:Male:Cairo:USA:MySQL:OpenSource
-Muhammed:Al-Khatib:nnnnnnnnnnnnn:sss:Male:UK:Qubaa:PHP, PostgreSQL:OS
+Ahmed Fatthi:ahmed_20210089@fci.helwan.edu.eg:123456:Application1::images/1690727164.jpg

@@ -3,39 +3,46 @@
 
 $errors = array();
 
-if(!isset($_POST['first-name']) or empty($_POST['first-name'])){
-    $errors['first-name'] = 'first name is required';
-}if(!isset($_POST['last-name']) or empty($_POST['last-name'])){
-    $errors['last-name'] = 'last name is required';
-}if(!isset($_POST['gender']) or empty($_POST['gender'])){
-    $errors['gender'] = 'gender is required';
-}if(!isset($_POST['address']) or empty($_POST['address'])){
-    $errors['address'] = 'address is required';
-}if(!isset($_POST['country']) or empty($_POST['country'])){
-    $errors['country'] = 'country is required';
-}if(!isset($_POST['username']) or empty($_POST['username'])){
-    $errors['username'] = 'username is required';
+
+$pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+
+if(!isset($_POST['name']) or empty($_POST['name'])){
+    $errors['name'] = 'name is required';
+}if(!isset($_POST['email']) or empty($_POST['email'])){
+    $errors['email'] = 'email is required';
+}if(!isset($_POST['room-number']) or empty($_POST['room-number'])){
+    $errors['room-number'] = 'room number is required';
 }if(!isset($_POST['password']) or empty($_POST['password'])){
     $errors['password'] = 'password is required';
-}if(!isset($_POST['department']) or empty($_POST['department'])){
-    $errors['department'] = 'department is required';
+}if ($_POST['password'] !== $_POST['confirm-password']) {
+    $errors['confirm-password'] = 'Password and Confirm Password do not match!';
+}if (preg_match($pattern, $_POST['email'])) {
+    $errors['email'] = 'email is not valid';
 }
 
+$imgName = $_FILES['profile-picture']['name'];
+$tmpName = $_FILES['profile-picture']['tmp_name'];
+$extension = pathinfo($_FILES['profile-picture']['name'])['extension'];
 
+
+
+if(!in_array($extension, ['png', 'jpg'])) {
+    $errors['imageExt'] = 'Not Valid';
+}
 
 
 if(empty($errors)){
 
-    $firstName = trim($_POST["first-name"]);
-    $lastName = trim($_POST["last-name"]);
-    $gender = $_POST["gender"];
-    $country = $_POST["country"];
-    $address = trim($_POST["address"]);
-    $skills = isset($_POST["skills"]) ? implode(", ", $_POST["skills"]) : "No skills selected";
-    $department = trim($_POST["department"]);
-    $username = trim($_POST['username']);
+    $name = trim($_POST["name"]);
+    $email = trim($_POST["email"]);
     $password = trim($_POST['password']);
+    $confirmPassword = $_POST["confirm-password"];
+    $roomNumber = trim($_POST["room-number"]);
+    $ext = trim($_POST["ext."]);
     $userVerificationCode = $_POST["verification-code"];
+
+    $imgNewName = 'images/'.time().'.'.$extension;
+    move_uploaded_file($tmpName, $imgNewName);
 
     if ($userVerificationCode != "13XP5") {
         header("Location: index.php?error=verification");
@@ -44,9 +51,10 @@ if(empty($errors)){
 
     $file = fopen('customers.txt', 'a');
 
-    fwrite($file, "$firstName:$lastName:$username:$password:$gender:$country:$address:$skills:$department\n");
+    fwrite($file, "$name:$email:$password:$roomNumber:$ext:$imgNewName\n");
     
     fclose($file);
+
     
     header('location:home.php');
 

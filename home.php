@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
 
-    <link rel="stylesheet" href="homeStyle.css">
+    <link rel="stylesheet" href="css/homeStyle.css">
 </head>
 <body>
 
@@ -23,15 +23,12 @@ $data = file('customers.txt');
 echo "<table class='table'>
 <thead>
   <tr>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Username</th>
+    <th>Name</th>
+    <th>Email</th>
     <th> Password </th>
-    <th> Gender </th>
-    <th>Country</th>
-    <th>Address</th>
-    <th>Skills</th>
-    <th>Department</th>
+    <th>Room No.</th>
+    <th>Ext.</th>
+    <th>Profile Picture</th>
     <th> Edit </th>
     <th> Delete </th>
     
@@ -52,10 +49,7 @@ foreach ($data as $key => $value) {
         <td> $line[2] </td>
         <td> $line[3] </td>
         <td> $line[4] </td>
-        <td> $line[5] </td>
-        <td> $line[6] </td>
-        <td> $line[7] </td>
-        <td> $line[8] </td>
+        <td> <img src='$line[5]' alt='Profile Picture' width='100'> </td>
         <td><a href='edit.php?username=$line[2]' > Edit </a></td>
         <td> <a href='delete.php?username=$line[2]'> Delete </a> </td>
 
