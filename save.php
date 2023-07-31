@@ -16,7 +16,7 @@ if(!isset($_POST['name']) or empty($_POST['name'])){
     $errors['password'] = 'password is required';
 }if ($_POST['password'] !== $_POST['confirm-password']) {
     $errors['confirm-password'] = 'Password and Confirm Password do not match!';
-}if (preg_match($pattern, $_POST['email'])) {
+}if (preg_match(!$pattern, $_POST['email'])) {
     $errors['email'] = 'email is not valid';
 }
 
@@ -49,12 +49,34 @@ if(empty($errors)){
         exit();
     }
 
-    $file = fopen('customers.txt', 'a');
+    // Establish database connection
+    $servername = "localhost"; // Change this if your database is hosted elsewhere
+    $username = "root";
+    $password = "";
+    $dbname = "PHP_Labs_Project";
 
-    fwrite($file, "$name:$email:$password:$roomNumber:$ext:$imgNewName\n");
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
     
-    fclose($file);
+    // Prepare and bind the statement
+    $stmt = $conn->prepare("INSERT INTO registration_data (name, email, password, room_number, ext, profile_picture, verification_code) 
+                           VALUES (?, ?, ?, ?, ?, ?, ?)");
+    
+    $stmt->bind_param("sssssss", $name, $email, $password, $roomNumber, $ext, $imgNewName, $userVerificationCode);
+    
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "Data inserted successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
 
+    // Close the database connection
+    $conn->close();
     
     header('location:home.php');
 

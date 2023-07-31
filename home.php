@@ -15,49 +15,69 @@
 
 
 <?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "PHP_Labs_Project";
 
 
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-$data = file('customers.txt');
-
-echo "<table class='table'>
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Email</th>
-    <th> Password </th>
-    <th>Room No.</th>
-    <th>Ext.</th>
-    <th>Profile Picture</th>
-    <th> Edit </th>
-    <th> Delete </th>
-    
-  </tr>
-</thead>
-
-"
-;
-
-foreach ($data as $key => $value) {
-
-    $line = explode(':', $value);
-
-    echo "<tr>
-
-        <td> $line[0] </td>
-        <td> $line[1] </td>
-        <td> $line[2] </td>
-        <td> $line[3] </td>
-        <td> $line[4] </td>
-        <td> <img src='$line[5]' alt='Profile Picture' width='100'> </td>
-        <td><a href='edit.php?username=$line[2]' > Edit </a></td>
-        <td> <a href='delete.php?username=$line[2]'> Delete </a> </td>
-
-
-    </tr>
-    
-    ";
-
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-echo "</table>";
+// Fetch data using prepared statement
+$sql = 'SELECT name, email, password, room_number, ext, profile_picture FROM registration_data';
+$stmt = $conn->prepare($sql);
+
+if ($stmt) {
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        echo "<table class='table'>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Room No.</th>
+                        <th>Ext.</th>
+                        <th>Profile Picture</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>";
+
+        while ($row = $result->fetch_assoc()) {
+            echo $row['profile_picture'];
+            echo "<tr>
+                    <td>{$row['name']}</td>
+                    <td>{$row['email']}</td>
+                    <td>{$row['password']}</td>
+                    <td>{$row['room_number']}</td>
+                    <td>{$row['ext']}</td>
+                    <td><img src='{$row['profile_picture']}' alt='Profile Picture' width='100'></td>
+                    <td><a href='edit.php?username={$row['email']}'>Edit</a></td>
+                    <td><a href='delete.php?username={$row['email']}'>Delete</a></td>
+                  </tr>";
+        }
+        
+        echo "</table>";
+    } else {
+        echo "No data found.";
+    }
+
+    $stmt->close();
+} else {
+    echo "Error in prepared statement: " . $conn->error;
+}
+
+$conn->close();
+?>
+
+</body>
+</html>
